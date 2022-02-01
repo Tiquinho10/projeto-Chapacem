@@ -9,6 +9,8 @@ import controller.BilheteController;
 import controller.PassageiroController;
 import dao.DataSource;
 import java.awt.CardLayout;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -37,8 +39,6 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
         Botoes(true, false, false, false, false);
 
         setLocationRelativeTo(null);
-        addItems();
-        readTable();
         totPassageirros();
         atualizarBtn.setEnabled(false);
         atualizarBtn.setVisible(false);
@@ -84,6 +84,24 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
         modelo.setNumRows(0);
 
         for (Passageiro p : PassageiroController.listaPassageiro()) {
+
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getApelido(),
+                p.getContacto(),
+                p.getNomeUsuario()
+            });
+        }
+
+    }
+
+    public void readTableRemovidos() {
+        DefaultTableModel modelo = (DefaultTableModel) tabela1.getModel();
+
+        modelo.setNumRows(0);
+
+        for (Passageiro p : PassageiroController.listaRemovidos()) {
 
             modelo.addRow(new Object[]{
                 p.getId(),
@@ -143,6 +161,7 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         inicio = new com.k33ptoo.components.KButton();
         cadastrar = new com.k33ptoo.components.KButton();
+        dataAtual = new javax.swing.JLabel();
         pnlCards = new javax.swing.JPanel();
         pnlCard4 = new javax.swing.JPanel();
         kGradientPanel4 = new com.k33ptoo.components.KGradientPanel();
@@ -159,6 +178,8 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
         d1Valor = new javax.swing.JTextField();
         cancelarBtn = new com.k33ptoo.components.KButton();
         atualizarPrecoBtn1 = new com.k33ptoo.components.KButton();
+        removidos = new com.k33ptoo.components.KButton();
+        jLabel9 = new javax.swing.JLabel();
         pnlCard1 = new javax.swing.JPanel();
         cadastro = new javax.swing.JLabel();
         nome = new javax.swing.JLabel();
@@ -201,6 +222,12 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         valorDepositoIn = new javax.swing.JTextField();
         kButton1 = new com.k33ptoo.components.KButton();
+        pnlCard5 = new javax.swing.JPanel();
+        kGradientPanel6 = new com.k33ptoo.components.KGradientPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabela1 = new javax.swing.JTable();
+        jLabel20 = new javax.swing.JLabel();
+        voltar = new com.k33ptoo.components.KButton();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -217,6 +244,11 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(null);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jSplitPane1.setBackground(new java.awt.Color(0, 0, 0));
         jSplitPane1.setDividerSize(1);
@@ -318,26 +350,33 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
             }
         });
 
+        dataAtual.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        dataAtual.setText("Data");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(lista, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
             .addComponent(sair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(depositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(cadastrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(inicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dataAtual, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(78, 78, 78))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(32, 32, 32)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(dataAtual)
+                .addGap(28, 28, 28)
                 .addComponent(inicio, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -421,6 +460,18 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
             }
         });
 
+        removidos.setText("Ver removidos");
+        removidos.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        removidos.setkAllowGradient(false);
+        removidos.setkBackGroundColor(new java.awt.Color(204, 0, 51));
+        removidos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removidosActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Removidos:");
+
         javax.swing.GroupLayout kGradientPanel4Layout = new javax.swing.GroupLayout(kGradientPanel4);
         kGradientPanel4.setLayout(kGradientPanel4Layout);
         kGradientPanel4Layout.setHorizontalGroup(
@@ -446,7 +497,12 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
                         .addGap(43, 43, 43)
                         .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
-                            .addComponent(txtTot, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtTot, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 335, Short.MAX_VALUE)
+                        .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(removidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(5, 5, 5))
                     .addGroup(kGradientPanel4Layout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -456,40 +512,47 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
                     .addGroup(kGradientPanel4Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(atualizarPrecoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(kGradientPanel4Layout.createSequentialGroup()
                                 .addComponent(atualizarPrecoBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cancelarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(386, Short.MAX_VALUE))
+                                .addComponent(cancelarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(atualizarPrecoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(99, 99, 99))
         );
         kGradientPanel4Layout.setVerticalGroup(
             kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(kGradientPanel4Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel8)
-                .addGap(54, 54, 54)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTot, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
-                .addComponent(jLabel10)
-                .addGap(18, 18, 18)
-                .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(valorD1)
-                    .addComponent(d1Valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(d2Valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(valorD2))
-                .addGap(30, 30, 30)
-                .addComponent(atualizarPrecoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(atualizarPrecoBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(kGradientPanel4Layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTot, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel10)
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(valorD1)
+                            .addComponent(d1Valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(d2Valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(valorD2))
+                        .addGap(30, 30, 30)
+                        .addComponent(atualizarPrecoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(atualizarPrecoBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cancelarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(kGradientPanel4Layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(removidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(203, Short.MAX_VALUE))
         );
 
@@ -849,6 +912,69 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
 
         pnlCards.add(pnlCard2, "pnlCard2");
 
+        pnlCard5.setBackground(new java.awt.Color(255, 51, 51));
+        pnlCard5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        kGradientPanel6.setkBorderRadius(0);
+        kGradientPanel6.setkEndColor(new java.awt.Color(204, 204, 255));
+        kGradientPanel6.setkStartColor(new java.awt.Color(153, 255, 255));
+
+        tabela1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "Nome", "Apelido", "Contacto", "Nome  Usuario"
+            }
+        ));
+        jScrollPane2.setViewportView(tabela1);
+
+        jLabel20.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel20.setText("Lista de Passageiros removidos");
+
+        voltar.setText("Voltar");
+        voltar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        voltar.setkAllowGradient(false);
+        voltar.setkBackGroundColor(new java.awt.Color(204, 0, 51));
+        voltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                voltarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout kGradientPanel6Layout = new javax.swing.GroupLayout(kGradientPanel6);
+        kGradientPanel6.setLayout(kGradientPanel6Layout);
+        kGradientPanel6Layout.setHorizontalGroup(
+            kGradientPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(kGradientPanel6Layout.createSequentialGroup()
+                .addContainerGap(36, Short.MAX_VALUE)
+                .addGroup(kGradientPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 765, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(kGradientPanel6Layout.createSequentialGroup()
+                            .addGap(290, 290, 290)
+                            .addComponent(voltar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(319, 319, 319)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(281, 281, 281))))
+        );
+        kGradientPanel6Layout.setVerticalGroup(
+            kGradientPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel6Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jLabel20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(voltar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(59, 59, 59))
+        );
+
+        pnlCard5.add(kGradientPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 670));
+
+        pnlCards.add(pnlCard5, "pnlCard5");
+
         jSplitPane1.setRightComponent(pnlCards);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -881,6 +1007,7 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private void listaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaActionPerformed
         // TODO add your handling code here:
         Botoes(false, false, false, true, false);
+        readTable();
         cardLayout.show(pnlCards, "pnlCard3");
 
     }//GEN-LAST:event_listaActionPerformed
@@ -899,6 +1026,7 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private void depositarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositarActionPerformed
         // TODO add your handling code here:
         Botoes(false, false, true, false, false);
+        addItems();
         cardLayout.show(pnlCards, "pnlCard2");
     }//GEN-LAST:event_depositarActionPerformed
 
@@ -919,60 +1047,77 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
             return;
         }
 
-        int idadeText = Integer.parseInt(idadeIn.getText());
-        double saldoConta = Double.parseDouble(valorIn.getText());
+        //----
+        String response = JOptionPane.showInputDialog(null, "Digite o codigo: ", "Acesso", ICONIFIED);
+        try {
 
-        if (contactoIn.getText().length() < 9 || !contactoIn.getText().startsWith("" + 8)) {
-            JOptionPane.showMessageDialog(this, "Por favor digite um numero de telefone valido: ");
+            if (response.equals("1234")) {
+                int idadeText = Integer.parseInt(idadeIn.getText());
+                double saldoConta = Double.parseDouble(valorIn.getText());
+
+                if (contactoIn.getText().length() < 9 || !contactoIn.getText().startsWith("" + 8)) {
+                    JOptionPane.showMessageDialog(this, "Por favor digite um numero de telefone valido: ");
+
+                    return;
+                }
+
+                if (saldoConta < 20) {
+                    JOptionPane.showMessageDialog(this, "Quantia minima e 20MTS");
+
+                    return;
+                } else if (saldoConta > 5000) {
+                    JOptionPane.showMessageDialog(this, "Quantia maxima e 5000MTS");
+
+                    return;
+
+                }
+
+                if (idadeText < 15) {
+                    JOptionPane.showMessageDialog(this, "Idade minima 15 anos");
+
+                    return;
+                }
+
+                if (PassageiroController.verificarUsuatio(nomeUsuarioIn.getText())) {
+
+                    return;
+                }
+
+                if (!palavraPasseIn.getText().equals(confpalavraPasseIn.getText())) {
+                    JOptionPane.showMessageDialog(this, "Palavra passe incorreta");
+
+                    return;
+
+                }
+
+                if (PassageiroController.salvarPassageiro(nomeIn.getText(), apelidoIn.getText(), idadeText, contactoIn.getText(), saldoConta, nomeUsuarioIn.getText(), palavraPasseIn.getText())) {
+                    System.out.println("salvo com sucesso");
+                    apelidoIn.setText("");
+                    contactoIn.setText("");
+                    idadeIn.setText("");
+                    nomeIn.setText("");
+                    nomeUsuarioIn.setText("");
+                    palavraPasseIn.setText("");
+                    confpalavraPasseIn.setText("");
+                    valorIn.setText("");
+
+                    readTable();
+                    addItems();
+                    totPassageirros();
+
+                }
+                System.out.println("correto...");
+            } else {
+                JOptionPane.showMessageDialog(this, "codigo incorrecto, tente novamente");
+
+                return;
+            }
+        } catch (NullPointerException e) {
 
             return;
         }
 
-        if (saldoConta < 20) {
-            JOptionPane.showMessageDialog(this, "Quantia minima e 20MTS");
-
-            return;
-        } else if (saldoConta > 5000) {
-            JOptionPane.showMessageDialog(this, "Quantia maxima e 5000MTS");
-
-            return;
-
-        }
-
-        if (idadeText < 15) {
-            JOptionPane.showMessageDialog(this, "Idade minima 15 anos");
-
-            return;
-        }
-
-        if (PassageiroController.verificarUsuatio(nomeUsuarioIn.getText())) {
-
-            return;
-        }
-
-        if (!palavraPasseIn.getText().equals(confpalavraPasseIn.getText())) {
-            JOptionPane.showMessageDialog(this, "Palavra passe incorreta");
-
-            return;
-
-        }
-
-        if (PassageiroController.salvarPassageiro(nomeIn.getText(), apelidoIn.getText(), idadeText, contactoIn.getText(), saldoConta, nomeUsuarioIn.getText(), palavraPasseIn.getText())) {
-            System.out.println("salvo com sucesso");
-            apelidoIn.setText("");
-            contactoIn.setText("");
-            idadeIn.setText("");
-            nomeIn.setText("");
-            nomeUsuarioIn.setText("");
-            palavraPasseIn.setText("");
-            confpalavraPasseIn.setText("");
-            valorIn.setText("");
-
-            readTable();
-            addItems();
-            totPassageirros();
-
-        }
+        //----
 
     }//GEN-LAST:event_salvarActionPerformed
 
@@ -986,25 +1131,48 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
 
     private void kButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kButton1ActionPerformed
         // TODO add your handling code here:
+        if (valorDepositoIn.getText().length() == 0) {
+            {
+                JOptionPane.showMessageDialog(this, "Digite o valor a depositar.");
 
-        Passageiro p = (Passageiro) passageirosList.getSelectedItem();
-
-        double quantia = Double.parseDouble(valorDepositoIn.getText());
-
-        if (quantia < 20) {
-            JOptionPane.showMessageDialog(this, "Quantia minima e 20MTS");
-
-            return;
-        } else if (quantia > 5000) {
-            JOptionPane.showMessageDialog(this, "Quantia maxima e 5000MTS");
-
-            return;
+                return;
+            }
 
         }
+        String response = JOptionPane.showInputDialog(null, "Digite o codigo: ", "Acesso", ICONIFIED);
+        try {
 
-        PassageiroController.depositar(p, quantia);
+            if (response.equals("1234")) {
+                Passageiro p = (Passageiro) passageirosList.getSelectedItem();
 
-        valorDepositoIn.setText("");
+                double quantia = Double.parseDouble(valorDepositoIn.getText());
+
+                if (quantia < 20) {
+                    JOptionPane.showMessageDialog(this, "Quantia minima e 20MTS");
+
+                    return;
+                } else if (quantia > 5000) {
+                    JOptionPane.showMessageDialog(this, "Quantia maxima e 5000MTS");
+
+                    return;
+
+                }
+
+                PassageiroController.depositar(p, quantia);
+
+                valorDepositoIn.setText("");
+                System.out.println("correto...");
+            } else {
+                JOptionPane.showMessageDialog(this, "codigo incorrecto, tente novamente");
+
+                return;
+            }
+        } catch (NullPointerException e) {
+
+            return;
+        }
+
+
     }//GEN-LAST:event_kButton1ActionPerformed
 
     private void removerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerActionPerformed
@@ -1013,23 +1181,46 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
         if (tabela.getSelectedRow() != -1) {
             int opt = JOptionPane.showConfirmDialog(null, "Tem a certeza que quer remover?", "remover", JOptionPane.YES_NO_OPTION);
             if (opt == 0) {
+                //---
+                String response = JOptionPane.showInputDialog(null, "Digite o codigo: ", "Acesso", ICONIFIED);
+                try {
 
-                int linha = tabela.getSelectedRow();
+                    if (response.equals("1234")) {
+                         int linha = tabela.getSelectedRow();
                 List<Passageiro> lista = PassageiroController.listaPassageiro();
 
                 Passageiro p = lista.get(linha);
 
-                System.out.println("id pass: " + p.getId());
+                if (p.getContaSaldo() > 0) {
+
+                    JOptionPane.showMessageDialog(this, "passageiro com saldo positivo e nao pode ser removido.");
+
+                    return;
+                }
+
                 if (PassageiroController.removerPassageiro(p.getId())) {
+                    PassageiroController.salvarRemovidos(p.getId(), p.getNome(), p.getApelido(), p.getIdade(), p.getContacto(), p.getContaSaldo(), p.getNomeUsuario(), p.getPalavraPasse());
                     readTable();
                     addItems();
                     totPassageirros();
 
                 } else {
-                    JOptionPane.showMessageDialog(this, "erro ao remover");
+
                 }
 
                 System.out.println("removido " + p);
+                        System.out.println("correto...");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "codigo incorrecto, tente novamente");
+
+                        return;
+                    }
+                } catch (NullPointerException e) {
+
+                    return;
+                }
+                //----
+               
             }
 
         } else {
@@ -1042,36 +1233,54 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
 
         //if(tabela)
         if (tabela.getSelectedRow() != -1) {
-            int linha = tabela.getSelectedRow();
-            List<Passageiro> lista = PassageiroController.listaPassageiro();
+            //----
+            String response = JOptionPane.showInputDialog(null, "Digite o codigo: ", "Acesso", ICONIFIED);
+            try {
 
-            Passageiro p = lista.get(linha);
+                if (response.equals("1234")) {
+                    int linha = tabela.getSelectedRow();
+                    List<Passageiro> lista = PassageiroController.listaPassageiro();
 
-            apelidoIn.setText(p.getApelido());
-            contactoIn.setText(p.getContacto());
-            idadeIn.setText(Integer.toString(p.getIdade()));
-            nomeIn.setText(p.getNome());
-            nomeUsuarioIn.setText(p.getNomeUsuario());
-            palavraPasseIn.setText(p.getPalavraPasse());
-            valorIn.setText(Double.toString(p.getContaSaldo()));
-            valorIn.setEnabled(false);
-            palavraPasseIn.setEnabled(false);
-            confpalavraPasseIn.setEnabled(false);
+                    Passageiro p = lista.get(linha);
 
-            setPassId(p.getId());
+                    apelidoIn.setText(p.getApelido());
+                    contactoIn.setText(p.getContacto());
+                    idadeIn.setText(Integer.toString(p.getIdade()));
+                    nomeIn.setText(p.getNome());
+                    nomeUsuarioIn.setText(p.getNomeUsuario());
+                    palavraPasseIn.setText(p.getPalavraPasse());
+                    valorIn.setText(Double.toString(p.getContaSaldo()));
+                    valorIn.setEnabled(false);
+                    palavraPasseIn.setEnabled(false);
+                    confpalavraPasseIn.setEnabled(false);
 
-            salvar.setEnabled(false);
-            salvar.setVisible(false);
+                    setPassId(p.getId());
 
-            atualizarBtn.setEnabled(true);
-            atualizarBtn.setVisible(true);
+                    salvar.setEnabled(false);
+                    salvar.setVisible(false);
 
-            cancelar.setEnabled(true);
-            cancelar.setVisible(true);
+                    atualizarBtn.setEnabled(true);
+                    atualizarBtn.setVisible(true);
 
-            cardLayout.show(pnlCards, "pnlCard1");
+                    cancelar.setEnabled(true);
+                    cancelar.setVisible(true);
 
-            System.out.println(p);
+                    cardLayout.show(pnlCards, "pnlCard1");
+                    Botoes(false, true, false, false, false);
+
+                    System.out.println(p);
+                    System.out.println("correto...");
+                } else {
+                    JOptionPane.showMessageDialog(this, "codigo incorrecto, tente novamente");
+
+                    return;
+                }
+            } catch (NullPointerException e) {
+
+                return;
+            }
+            //---
+
         } else {
             JOptionPane.showMessageDialog(this, "Selecione alguem");
         }
@@ -1190,17 +1399,30 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private void atualizarPrecoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarPrecoBtnActionPerformed
         // TODO add your handling code here:
 
-        d1Valor.setEditable(true);
-        d1Valor.requestFocus();
-        d2Valor.setEditable(true);
+        String response = JOptionPane.showInputDialog(null, "Digite o codigo: ", "Acesso", ICONIFIED);
+        try {
 
-        atualizarPrecoBtn1.setEnabled(true);
-        atualizarPrecoBtn1.setVisible(true);
-        cancelarBtn.setEnabled(true);
-        cancelarBtn.setVisible(true);
+            if (response.equals("1234")) {
+                d1Valor.setEditable(true);
+                d1Valor.requestFocus();
+                d2Valor.setEditable(true);
 
-        atualizarPrecoBtn.setEnabled(false);
-        atualizarPrecoBtn.setVisible(false);
+                atualizarPrecoBtn1.setEnabled(true);
+                atualizarPrecoBtn1.setVisible(true);
+                cancelarBtn.setEnabled(true);
+                cancelarBtn.setVisible(true);
+                atualizarPrecoBtn.setEnabled(false);
+                atualizarPrecoBtn.setVisible(false);
+                System.out.println("correto...");
+            } else {
+                JOptionPane.showMessageDialog(this, "codigo incorrecto, tente novamente");
+
+                return;
+            }
+        } catch (NullPointerException e) {
+
+            return;
+        }
 
 
     }//GEN-LAST:event_atualizarPrecoBtnActionPerformed
@@ -1249,6 +1471,42 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
             atualizarPrecoBtn.setVisible(true);
         }
     }//GEN-LAST:event_atualizarPrecoBtn1ActionPerformed
+
+    private void removidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removidosActionPerformed
+        // TODO add your handling code here:
+        //String response = JOptionPane.showInputDialog("digite o codigo: ");
+        String response = JOptionPane.showInputDialog(null, "Digite o codigo: ", "Acesso", ICONIFIED);
+        try {
+
+            if (response.equals("1234")) {
+                readTableRemovidos();
+                cardLayout.show(pnlCards, "pnlCard5");
+                System.out.println("correto...");
+            } else {
+                JOptionPane.showMessageDialog(this, "codigo incorrecto, tente novamente");
+
+                return;
+            }
+        } catch (NullPointerException e) {
+
+            return;
+        }
+
+
+    }//GEN-LAST:event_removidosActionPerformed
+
+    private void voltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voltarActionPerformed
+        // TODO add your handling code here:
+        cardLayout.show(pnlCards, "pnlCard4");
+
+    }//GEN-LAST:event_voltarActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+         Date data = new Date();
+      DateFormat formatador = DateFormat.getDateInstance(DateFormat.SHORT);
+       dataAtual.setText(formatador.format(data));
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -1304,6 +1562,7 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField contactoIn;
     private javax.swing.JTextField d1Valor;
     private javax.swing.JTextField d2Valor;
+    private javax.swing.JLabel dataAtual;
     private com.k33ptoo.components.KButton depositar;
     private javax.swing.JLabel idade;
     private javax.swing.JTextField idadeIn;
@@ -1314,15 +1573,18 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextField2;
     private com.k33ptoo.components.KButton kButton1;
@@ -1330,6 +1592,7 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private com.k33ptoo.components.KGradientPanel kGradientPanel2;
     private com.k33ptoo.components.KGradientPanel kGradientPanel3;
     private com.k33ptoo.components.KGradientPanel kGradientPanel4;
+    private com.k33ptoo.components.KGradientPanel kGradientPanel6;
     private com.k33ptoo.components.KButton lista;
     private com.k33ptoo.components.KButton listarTodos;
     private javax.swing.JLabel nome;
@@ -1344,17 +1607,21 @@ public class TelaPrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel pnlCard2;
     private javax.swing.JPanel pnlCard3;
     private javax.swing.JPanel pnlCard4;
+    private javax.swing.JPanel pnlCard5;
     private javax.swing.JPanel pnlCards;
     private com.k33ptoo.components.KButton remover;
+    private com.k33ptoo.components.KButton removidos;
     private com.k33ptoo.components.KButton sair;
     private com.k33ptoo.components.KButton salvar;
     private javax.swing.JTable tabela;
+    private javax.swing.JTable tabela1;
     private javax.swing.JLabel txtTot;
     private javax.swing.JLabel valor;
     private javax.swing.JLabel valorD1;
     private javax.swing.JLabel valorD2;
     private javax.swing.JTextField valorDepositoIn;
     private javax.swing.JTextField valorIn;
+    private com.k33ptoo.components.KButton voltar;
     // End of variables declaration//GEN-END:variables
 
     public Integer getPassId() {

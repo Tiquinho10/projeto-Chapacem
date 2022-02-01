@@ -7,7 +7,6 @@ package view;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -17,33 +16,40 @@ import controller.PassageiroController;
 import java.awt.CardLayout;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
-import javax.swing.text.Style;
 import model.Bilhete;
 import model.Paragens;
 import model.Paragens2;
 import model.Passageiro;
-import model.ThreadParagens;
-import model.ThreadParagens2;
+import model.Semi_ColectivoA;
+import model.Semi_ColectivoB;
 
 /**
  *
  * @author ELITEBOOK
  */
-public class TelaPrincipalApp1 extends javax.swing.JFrame {
+public class TelaPrincipalApp extends javax.swing.JFrame {
 
-    ThreadParagens paragem = new ThreadParagens("mmc-02-02");
-    ThreadParagens2 paragem2 = new ThreadParagens2("mmc-01-02");
-    ThreadParagens paragem3 = new ThreadParagens("mmc-01-03");
-    ThreadParagens2 paragem4 = new ThreadParagens2("mmc-03-44");
+  
+    //----------------------------
+         Semi_ColectivoB chapa = new Semi_ColectivoB("mmc-33-02", 0);
+         Semi_ColectivoB chapa2 = new Semi_ColectivoB("mmc-12-15", 1);
+         
+         Semi_ColectivoA chapa3 = new Semi_ColectivoA("mmc-83-12", 0);
+         Semi_ColectivoA chapa4 = new Semi_ColectivoA("mmc-11-25", 1);
+    
+    //----------------
     List<Paragens2> lista1 = Arrays.asList(Paragens2.values());
     List<Paragens> lista = Arrays.asList(Paragens.values());
+    
+   
     Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
     CardLayout cardLayout;
     private String nomePassagereiro;
@@ -51,25 +57,26 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
     private Passageiro passageiro;
     float valor = 0.0f;
     List<Bilhete> listaPrecos = BilheteController.listaPrecario();
-    float  precoD1 = listaPrecos.get(0).getPrecoD1();
-    float  precoD2 = listaPrecos.get(0).getPrecoD2();
+    float precoD1 = listaPrecos.get(0).getPrecoD1();
+    float precoD2 = listaPrecos.get(0).getPrecoD2();
+    ThreadsCells cells;
 
-
-    
     /**
      * Creates new form TelaLoginApp
      */
-    private TelaPrincipalApp1() {
+    private TelaPrincipalApp() {
 
         initComponents();
 
         setLocationRelativeTo(null);
         rotas();
+        transporte.setRenderer(new ThreadsCells());
         System.out.println(precoD1 + " - " + precoD2);
         cardLayout = (CardLayout) (views.getLayout());
+        
     }
 
-    public TelaPrincipalApp1(Passageiro p) {
+    public TelaPrincipalApp(Passageiro p) {
         this();
 
         nomeUsuarioLogado.setText("Bem vindo(a) " + p.getNome());
@@ -106,26 +113,12 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
     }
 
     private void rotas() {
-//        threadSet.stream().filter((x) -> (x.getThreadGroup().getName().equals("main"))).forEachOrdered((x) -> {
-//            rotas.addItem(x.getName());
-//          });
-//       for(Thread x : threadSet){
-//           if(x.getThreadGroup().getName().equals("main"))
-//           //rotas.addItem(x.getName());
-//
-//             System.out.println(x.getName());
-//        }//
 
-        rotasTest.addItem("Alto-Mae-P.Combantentes");
-        rotasTest.addItem("Central-Ronil");
+        rotas.addItem("Alto-Mae-P.Combantentes");
+        rotas.addItem("Central-Ronil");
 
         rotaBilhete.addItem("Alto-Mae-P.Combantentes");
         rotaBilhete.addItem("Central-Ronil");
-        for (Thread x : threadSet) {
-            if ((x.getThreadGroup() == Thread.currentThread().getThreadGroup()) && (!x.getName().equals("DestroyJavaVM") && !x.getName().equals("AWT-EventQueue-0") && !x.getName().equals("mysql-cj-abandoned-connection-cleanup"))) {
-                // rotas.addItem(x.getName());
-            }
-        }
 
     }
 
@@ -150,13 +143,14 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         bateria1 = new javax.swing.JLabel();
         chapaLogo = new javax.swing.JLabel();
         rotasLbl = new javax.swing.JLabel();
-        rotas = new javax.swing.JComboBox<>();
+        transporte = new javax.swing.JComboBox<>();
         paragens = new javax.swing.JLabel();
         pontoParagem = new javax.swing.JComboBox<>();
         ver = new com.k33ptoo.components.KButton();
         bilhete = new com.k33ptoo.components.KButton();
-        rotasTest = new javax.swing.JComboBox<>();
+        rotas = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        javaIcon3 = new javax.swing.JLabel();
         view2 = new javax.swing.JPanel();
         wifi = new javax.swing.JLabel();
         google = new javax.swing.JLabel();
@@ -277,9 +271,9 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         rotasLbl.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         rotasLbl.setText("Rotas");
 
-        rotas.addActionListener(new java.awt.event.ActionListener() {
+        transporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rotasActionPerformed(evt);
+                transporteActionPerformed(evt);
             }
         });
 
@@ -313,14 +307,16 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
             }
         });
 
-        rotasTest.addActionListener(new java.awt.event.ActionListener() {
+        rotas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rotasTestActionPerformed(evt);
+                rotasActionPerformed(evt);
             }
         });
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel1.setText("Transportes disponiveis");
+
+        javaIcon3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8_java_26px.png"))); // NOI18N
 
         javax.swing.GroupLayout view1Layout = new javax.swing.GroupLayout(view1);
         view1.setLayout(view1Layout);
@@ -332,9 +328,11 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, view1Layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addComponent(email1)
-                        .addGap(38, 38, 38)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(javaIcon3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(google1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(relogio1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wifi1)
@@ -351,12 +349,12 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, view1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 118, Short.MAX_VALUE)
                 .addGroup(view1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, view1Layout.createSequentialGroup()
                         .addGroup(view1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rotasTest, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(rotas, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(transporte, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(pontoParagem, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(108, 108, 108))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, view1Layout.createSequentialGroup()
@@ -372,21 +370,21 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
                 .addGroup(view1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bateria1)
                     .addComponent(wifi1)
-                    .addComponent(google1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(relogio1)
-                    .addGroup(view1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(email1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(view1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(javaIcon3)
+                        .addComponent(email1))
+                    .addComponent(google1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(chapaLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addComponent(rotasLbl)
                 .addGap(18, 18, 18)
-                .addComponent(rotasTest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(rotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(transporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(paragens)
                 .addGap(18, 18, 18)
@@ -395,7 +393,7 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
                 .addComponent(ver, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
                 .addComponent(bilhete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
         views.add(view1, "view1");
@@ -844,7 +842,7 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(kGradientPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(views, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(views, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -867,33 +865,27 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         cardLayout.show(views, "view2");
     }//GEN-LAST:event_infoActionPerformed
 
-    private void rotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotasActionPerformed
-        // TODO add your handling code here:
-        // System.out.println("nome " + nomeRota);
-        // System.out.println(String.valueOf("xz " + rotas.getSelectedItem()).substring(0, 23));
-        // String rota = nomeRota.substring(0, 22);
-        //  if (rotas.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
-        //if (String.valueOf(rotas.getSelectedItem()).substring(0, 26).equals("Alto-Mae-P.Combantentes")) {
-
-        //System.out.println(rotas.getSelectedItem().getClass().getSimpleName());
-        // if (rotas.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
-        //  if(rotas.getSelectedItem() instanceof ThreadParagens2){
-        if (String.valueOf(rotas.getSelectedItem()).substring(0, 4).equals("Alto")) {
+    private void transporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transporteActionPerformed
+      
+          
+          
+       if (String.valueOf(transporte.getSelectedItem()).contains("Alto")) {
             pontoParagem.removeAllItems();
             for (Paragens2 x : lista1) {
                 pontoParagem.addItem(x.toString());
             }
-        } //else if (rotas.getSelectedItem().equals("Central-Ronil")) {
-        else if (String.valueOf(rotas.getSelectedItem()).substring(0, 4).equals("Cent")) {
+        } else if (String.valueOf(transporte.getSelectedItem()).contains("Cent")) {
+           
             pontoParagem.removeAllItems();
             for (Paragens x : lista) {
                 pontoParagem.addItem(x.toString());
             }
         }
-    }//GEN-LAST:event_rotasActionPerformed
+    }//GEN-LAST:event_transporteActionPerformed
 
     private void verActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verActionPerformed
         // TODO add your handling code here:
+     
         localizacaoPraca_ALtoMae();
         localizacaoCentral_Ronil();
 
@@ -903,7 +895,7 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
     private void bilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bilheteActionPerformed
         // TODO add your handling code here:
 
-         cardLayout.show(views, "view4"); 
+        cardLayout.show(views, "view4");
 
 
     }//GEN-LAST:event_bilheteActionPerformed
@@ -925,39 +917,39 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_terminarSessao2ActionPerformed
 
-    private void rotasTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotasTestActionPerformed
+    private void rotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotasActionPerformed
         // TODO add your handling code here:
-        // String rota = nomeRota.substring(0, 22);
-        //  if (rotas.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
-        //if (String.valueOf(rotas.getSelectedItem()).substring(0, 26).equals("Alto-Mae-P.Combantentes")) {
 
-        //System.out.println(rotas.getSelectedItem().getClass().getSimpleName());
-        // if (rotas.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
-        if (rotasTest.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
-            //if (String.valueOf(rotas.getSelectedItem()).substring(0, 4).equals("Alto")) {
-            rotas.removeAllItems();
+        if (rotas.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
+
+            transporte.removeAllItems();
             for (Thread x : threadSet) {
-                //if (x.getThreadGroup().getName().substring(0, 4).equals("Alto")) {
+                
+               
+               
                 if ((x.getThreadGroup() == Thread.currentThread().getThreadGroup()) && (!x.getName().equals("DestroyJavaVM") && !x.getName().equals("AWT-EventQueue-0") && !x.getName().equals("mysql-cj-abandoned-connection-cleanup") && x.getName().substring(0, 4).equals("Alto"))) {
-                    rotas.addItem(x.getName());
-
-                    System.out.println("thread atual: " + x.getName());
+                    
+                    transporte.addItem(x);
+                    
+                System.out.println(" teste: " + x.toString());
+                    
+                    System.out.println("thread atual: " + x);
                 }
-                // System.out.println(x.getThreadGroup().getName().getClass().getSimpleName());
             }
-        } else if (rotasTest.getSelectedItem().equals("Central-Ronil")) {
+        } else if (rotas.getSelectedItem().equals("Central-Ronil")) {
 
-            rotas.removeAllItems();
+            transporte.removeAllItems();
             for (Thread x : threadSet) {
-                //if (x.getThreadGroup().getName().substring(0, 4).equals("Alto")) {
+
                 if ((x.getThreadGroup() == Thread.currentThread().getThreadGroup()) && (!x.getName().equals("DestroyJavaVM") && !x.getName().equals("AWT-EventQueue-0") && !x.getName().equals("mysql-cj-abandoned-connection-cleanup") && x.getName().substring(0, 4).equals("Cent"))) {
-                    rotas.addItem(x.getName());
+                    
+                    transporte.addItem(x);
                     System.out.println("thread atual: " + x.getName());
                 }
-                // System.out.println(x.getThreadGroup().getName().getClass().getSimpleName());
+
             }
         }
-    }//GEN-LAST:event_rotasTestActionPerformed
+    }//GEN-LAST:event_rotasActionPerformed
 
     private void suporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suporteActionPerformed
         // TODO add your handling code here:
@@ -966,25 +958,29 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
 
     private void comprarBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comprarBilheteActionPerformed
         // TODO add your handling code here:
-        
+
         destinolbl.setText("");
         if (partidaBilhete.getSelectedItem().equals(destinoBilhete.getSelectedItem())) {
-           // JOptionPane.showMessageDialog(this, "Destino invalido");
-           destinolbl.setText("Destino invalido.");
+            // JOptionPane.showMessageDialog(this, "Destino invalido");
+            destinolbl.setText("Destino invalido.");
             return;
         }
 
         bilheteCentral_Ronil();
         bilhetePraca_ALtoMae();
-        
-         Rectangle tamDoc = new Rectangle(400, 200);
+
+        Rectangle tamDoc = new Rectangle(400, 230);
 
         float columnWidth[] = {200f, 50f, 100f};
 
         Document document = new Document(tamDoc);
 
-        int opt = JOptionPane.showConfirmDialog(null, "Preco do bilhete: "+valor+"mts , continuar?", "Comprar bilhete", JOptionPane.YES_NO_OPTION);
-         
+        Date data = new Date();
+        DateFormat formatador = DateFormat.getDateInstance(DateFormat.SHORT);
+       
+
+        int opt = JOptionPane.showConfirmDialog(null, "Preco do bilhete: " + valor + "mts , continuar?", "Comprar bilhete", JOptionPane.YES_NO_OPTION);
+
         if (opt == 0) {
             if (passageiro.getContaSaldo() >= valor) {
 
@@ -1000,12 +996,14 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
 
                     document.open();
                     document.add(new Paragraph("                         ChapaCem           "));
+
                     document.add(new Paragraph("Nome do Passageiro: " + nomePassagereiro + " " + passageiro.getApelido() + ";"));
-                    document.add(new Paragraph("Rota: " + String.valueOf(rotaBilhete.getSelectedItem()) + ";" ));
-                    document.add(new Paragraph("Ponto de partida: " + String.valueOf(partidaBilhete.getSelectedItem())  + ";"));
-                    document.add(new Paragraph("Destino: " + String.valueOf(destinoBilhete.getSelectedItem())   + ";"));
+                    document.add(new Paragraph("Rota: " + String.valueOf(rotaBilhete.getSelectedItem()) + ";"));
+                    document.add(new Paragraph("Ponto de partida: " + String.valueOf(partidaBilhete.getSelectedItem()) + ";"));
+                    document.add(new Paragraph("Destino: " + String.valueOf(destinoBilhete.getSelectedItem()) + ";"));
                     document.add(new Paragraph("Bilhete nr: " + nrBilhete));
-                    document.add(new Paragraph("Total pago: " + valor+"mts"));
+                    document.add(new Paragraph("Total pago: " + valor + "mts"));
+                    document.add(new Paragraph("Data: " + formatador.format(data) + ";"));
 
                     Desktop.getDesktop().open(new File(nomeDocumento));
 
@@ -1013,17 +1011,12 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
                     System.out.println("Erro: " + ex.getMessage());
                 } finally {
                     document.close();
+
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Saldo insuficiente");
             }
 
-//
-//        try {
-//            Desktop.getDesktop().open(new File("bilhete.pdf"));
-//        } catch (IOException ex) {
-//            System.out.println("Erro: " + ex.getMessage());
-//        }
         }
     }//GEN-LAST:event_comprarBilheteActionPerformed
 
@@ -1069,7 +1062,7 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
 
     private void voltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voltar1ActionPerformed
         // TODO add your handling code here:
-         cardLayout.show(views, "view2");
+        cardLayout.show(views, "view2");
     }//GEN-LAST:event_voltar1ActionPerformed
 
     private void rotaBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotaBilheteActionPerformed
@@ -1100,74 +1093,77 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_partidaBilheteActionPerformed
 
-    private void localizacaoPraca_ALtoMae() {
+    private synchronized void localizacaoPraca_ALtoMae()  {
+       
+        
+        
         int tempoEspera = 0;
 
-        //JOptionPane.showMessageDialog(this, "Localizacao atual: " + this.paragem.getParagens() + "lotacao atual: " + this.paragem.getLotacaoAtual());
-        //        System.out.println(Thread.currentThread().getName());
-        //        System.out.println(Thread.currentThread().isAlive());
-        //if (rotas.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
-        if (String.valueOf(rotas.getSelectedItem()).substring(0, 4).equals("Alto")) {
-            if (pontoParagem.getSelectedItem().equals("ALTO_MAE") && this.paragem2.getParagens().equals(Paragens2.PRACA)) {
+          if (String.valueOf(transporte.getSelectedItem()).contains("Alto")) {
+               Semi_ColectivoA A = (Semi_ColectivoA) transporte.getSelectedItem();
+              // A.esperaMudar();
+            if (pontoParagem.getSelectedItem().equals("ALTO_MAE") && A.getParagens().equals(Paragens2.PRACA)) {
                 tempoEspera = 20;
-            } else if (pontoParagem.getSelectedItem().equals("ALTO_MAE") && this.paragem2.getParagens().equals(Paragens2.SHOPRITE)) {
+            } else if (pontoParagem.getSelectedItem().equals("ALTO_MAE") && A.getParagens().equals(Paragens2.SHOPRITE)) {
                 tempoEspera = 10;
             }
 
-            if (pontoParagem.getSelectedItem().equals("SHOPRITE") && this.paragem2.getParagens().equals(Paragens2.PRACA)) {
+            if (pontoParagem.getSelectedItem().equals("SHOPRITE") && A.getParagens().equals(Paragens2.PRACA)) {
                 tempoEspera = 10;
-            } else if (pontoParagem.getSelectedItem().equals("SHOPRITE") && this.paragem2.getParagens().equals(Paragens2.ALTO_MAE)) {
+            } else if (pontoParagem.getSelectedItem().equals("SHOPRITE") && A.getParagens().equals(Paragens2.ALTO_MAE)) {
                 tempoEspera = 10;
             }
 
-            if (pontoParagem.getSelectedItem().equals("PRACA") && this.paragem2.getParagens().equals(Paragens2.SHOPRITE)) {
+            if (pontoParagem.getSelectedItem().equals("PRACA") && A.getParagens().equals(Paragens2.SHOPRITE)) {
                 tempoEspera = 10;
-            } else if (pontoParagem.getSelectedItem().equals("PRACA") && this.paragem2.getParagens().equals(Paragens2.ALTO_MAE)) {
+            } else if (pontoParagem.getSelectedItem().equals("PRACA") && A.getParagens().equals(Paragens2.ALTO_MAE)) {
                 tempoEspera = 20;
             }
 
-            JOptionPane.showMessageDialog(this, "Localizacao atual: " + this.paragem2.getParagens() + " || lotacao atual: " + this.paragem2.getLotacaoAtual() + "/" + this.paragem.getLotacaoMax() + "\nTempo aproximado de espera: " + tempoEspera + " mins");
+         
+         
+             
+
+            
+            
+              JOptionPane.showMessageDialog(this,"Transporte: " + A.getThreadName() + "\n\nLocalizacao atual: " + A.getParagens() + " || lotacao atual: " + A.getLotacaoAtual() + "/" + A.getLotacaoMax() + "\nTempo aproximado de espera: " + tempoEspera + " mins");
         }
     }
 
-    private void localizacaoCentral_Ronil() {
+    private synchronized void localizacaoCentral_Ronil() {
+        
+        
         int tempoEspera = 0;
 
-        //JOptionPane.showMessageDialog(this, "Localizacao atual: " + this.paragem.getParagens() + "lotacao atual: " + this.paragem.getLotacaoAtual());
-        //        System.out.println(Thread.currentThread().getName());
-        //        System.out.println(Thread.currentThread().isAlive());
-        //CENTRAL(15000), PANDORA(2000), RONIL(2000);
-        //if (rotas.getSelectedItem().equals("Central-Ronil")) {
-        if (String.valueOf(rotas.getSelectedItem()).substring(0, 7).equals("Central")) {
-            if (pontoParagem.getSelectedItem().equals("CENTRAL") && this.paragem.getParagens().equals(Paragens.RONIL)) {
+         if (String.valueOf(transporte.getSelectedItem()).contains("Cent")) {
+              Semi_ColectivoB B = (Semi_ColectivoB) transporte.getSelectedItem();
+              //B.esperaMudar();
+            if (pontoParagem.getSelectedItem().equals("CENTRAL") && B.getParagens().equals(Paragens.RONIL)) {
                 tempoEspera = 20;
-            } else if (pontoParagem.getSelectedItem().equals("CENTRAL") && this.paragem.getParagens().equals(Paragens.PANDORA)) {
+            } else if (pontoParagem.getSelectedItem().equals("CENTRAL") && B.getParagens().equals(Paragens.PANDORA)) {
                 tempoEspera = 10;
             }
 
-            if (pontoParagem.getSelectedItem().equals("PANDORA") && this.paragem.getParagens().equals(Paragens.RONIL)) {
+            if (pontoParagem.getSelectedItem().equals("PANDORA") && B.getParagens().equals(Paragens.RONIL)) {
                 tempoEspera = 10;
-            } else if (pontoParagem.getSelectedItem().equals("PANDORA") && this.paragem.getParagens().equals(Paragens.CENTRAL)) {
+            } else if (pontoParagem.getSelectedItem().equals("PANDORA") && B.getParagens().equals(Paragens.CENTRAL)) {
                 tempoEspera = 10;
             }
 
-            if (pontoParagem.getSelectedItem().equals("RONIL") && this.paragem.getParagens().equals(Paragens.PANDORA)) {
+            if (pontoParagem.getSelectedItem().equals("RONIL") && B.getParagens().equals(Paragens.PANDORA)) {
                 tempoEspera = 10;
-            } else if (pontoParagem.getSelectedItem().equals("RONIL") && this.paragem.getParagens().equals(Paragens.CENTRAL)) {
+            } else if (pontoParagem.getSelectedItem().equals("RONIL") && B.getParagens().equals(Paragens.CENTRAL)) {
                 tempoEspera = 20;
             }
 
-            JOptionPane.showMessageDialog(this, "Localizacao atual: " + this.paragem.getParagens() + " || lotacao atual: " + this.paragem.getLotacaoAtual() + "/" + this.paragem.getLotacaoMax() + "\nTempo aproximado de espera: " + tempoEspera + " mins");
+//           
+             JOptionPane.showMessageDialog(this,"Transporte: " + B.getThreadName() + "\n\nLocalizacao atual: " + B.getParagens() + " || lotacao atual: " + B.getLotacaoAtual() + "/" + B.getLotacaoMax() + "\nTempo aproximado de espera: " + tempoEspera + " mins");
+           
         }
     }
 
     private void bilheteCentral_Ronil() {
-        //int valor = 0;
 
-        //JOptionPane.showMessageDialog(this, "Localizacao atual: " + this.paragem.getParagens() + "lotacao atual: " + this.paragem.getLotacaoAtual());
-        //        System.out.println(Thread.currentThread().getName());
-        //        System.out.println(Thread.currentThread().isAlive());
-        //CENTRAL(15000), PANDORA(2000), RONIL(2000);
         if (rotaBilhete.getSelectedItem().equals("Central-Ronil")) {
             if (partidaBilhete.getSelectedItem().equals(Paragens.CENTRAL.toString()) && destinoBilhete.getSelectedItem().equals(Paragens.RONIL.toString())) {
                 valor = precoD2;
@@ -1177,28 +1173,23 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
 
             //pandora - ronil
             if (partidaBilhete.getSelectedItem().equals(Paragens.PANDORA.toString()) && destinoBilhete.getSelectedItem().equals(Paragens.RONIL.toString())) {
-                valor =  precoD1;
+                valor = precoD1;
             } else if (partidaBilhete.getSelectedItem().equals(Paragens.PANDORA.toString()) && destinoBilhete.getSelectedItem().equals(Paragens.CENTRAL.toString())) {
-                valor =  precoD1;
+                valor = precoD1;
             }
             //ronil pandora
             if (partidaBilhete.getSelectedItem().equals(Paragens.RONIL.toString()) && destinoBilhete.getSelectedItem().equals(Paragens.PANDORA.toString())) {
-                valor =  precoD1;
+                valor = precoD1;
             } else if (partidaBilhete.getSelectedItem().equals(Paragens.RONIL.toString()) && destinoBilhete.getSelectedItem().equals(Paragens.CENTRAL.toString())) {
-                valor =  precoD2;
+                valor = precoD2;
             }
-           
-          
+
         }
     }
-    
-    private void bilhetePraca_ALtoMae() {
-       // int valor = 0;
 
-        //JOptionPane.showMessageDialog(this, "Localizacao atual: " + this.paragem.getParagens() + "lotacao atual: " + this.paragem.getLotacaoAtual());
-        //        System.out.println(Thread.currentThread().getName());
-        //        System.out.println(Thread.currentThread().isAlive());
-        //CENTRAL(15000), PANDORA(2000), RONIL(2000);
+    private void bilhetePraca_ALtoMae() {
+        // int valor = 0;
+
         if (rotaBilhete.getSelectedItem().equals("Alto-Mae-P.Combantentes")) {
             if (partidaBilhete.getSelectedItem().equals(Paragens2.ALTO_MAE.toString()) && destinoBilhete.getSelectedItem().equals(Paragens2.PRACA.toString())) {
                 valor = precoD2;
@@ -1219,10 +1210,10 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
                 valor = precoD2;
             }
 
-           
         }
     }
 
+   
     /**
      * @param args the command line arguments
      */
@@ -1252,10 +1243,11 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new TelaPrincipalApp1().setVisible(true);
+            new TelaPrincipalApp().setVisible(true);
         });
     }
 
@@ -1289,6 +1281,7 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
     private javax.swing.JLabel javaIcon;
     private javax.swing.JLabel javaIcon1;
     private javax.swing.JLabel javaIcon2;
+    private javax.swing.JLabel javaIcon3;
     private com.k33ptoo.components.KGradientPanel kGradientPanel1;
     private com.k33ptoo.components.KButton mudar;
     private com.k33ptoo.components.KButton mudarPassword;
@@ -1305,9 +1298,9 @@ public class TelaPrincipalApp1 extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> rotaBilhete;
     private javax.swing.JComboBox<String> rotas;
     private javax.swing.JLabel rotasLbl;
-    private javax.swing.JComboBox<String> rotasTest;
     private com.k33ptoo.components.KButton suporte;
     private com.k33ptoo.components.KButton terminarSessao2;
+    private javax.swing.JComboBox<Thread> transporte;
     private javax.swing.JPasswordField txtatualpass;
     private javax.swing.JPasswordField txtconfirmpass;
     private javax.swing.JPasswordField txtnovapass;

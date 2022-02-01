@@ -26,6 +26,18 @@ public class PassageiroController {
         return true;
 
     }
+    
+    public static void salvarRemovidos(int id, String nome, String apelido, int idade, String contacto, double saldoConta, String nomeUsuario, String palavraPasse) {
+        PassageiroDao dao = new PassageiroDao(dataSource);
+
+        passageiro = new Passageiro(saldoConta, nome, apelido, idade, contacto, nomeUsuario, palavraPasse);
+        passageiro.setId(id);
+        dao.inserirRemovido(passageiro);
+        
+
+       
+
+    }
 
     public static boolean atualizarPassageiro(String nome, String apelido, int idade, String contacto, double saldoConta, String nomeUsuario, String palavraPasse, int id) {
         PassageiroDao dao = new PassageiroDao(dataSource);
@@ -45,6 +57,9 @@ public class PassageiroController {
 
     }
 
+    
+    
+    
     public static boolean removerPassageiro(int id) {
         PassageiroDao dao = new PassageiroDao(dataSource);
 
@@ -89,6 +104,14 @@ public class PassageiroController {
         PassageiroDao dao = new PassageiroDao(dataSource);
 
         List<Passageiro> lista = dao.readAll();
+
+        return lista;
+    }
+    
+      public static List<Passageiro> listaRemovidos() {
+        PassageiroDao dao = new PassageiroDao(dataSource);
+
+        List<Passageiro> lista = dao.readAllRemovidos();
 
         return lista;
     }

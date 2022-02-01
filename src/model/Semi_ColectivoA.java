@@ -1,39 +1,61 @@
 package model;
 
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class ThreadParagens2 implements Runnable {
+ /**
+  * classe que simula a movimentacao de um transporte 
+  * para o efeito foram usadas Threads(Processos)
+  */
+public class Semi_ColectivoA extends Thread{
      private boolean parar;
      private boolean mudouParagem;
      private Paragens2 paragens;
      private int lotacaoAtual;
-     private final int lotacaoMax = 10;
+     private final int lotacaoMax = 40;
      private boolean volta;
-     int cont = 0;
+     private int cont = 0;
+     private Random random = new Random();
     
-    public ThreadParagens2(String matricula){
-         this.paragens = Paragens2.ALTO_MAE;
+     /**
+      * contrutor da classe que inicia a thread
+      * @param matricula - recebe a matricula do veiculo
+      */
+    public Semi_ColectivoA(String matricula, int terminal){
+         setCont(terminal);
+         if(cont >= 1){
+             this.paragens = Paragens2.PRACA;
+             System.out.println("Terminal Praca");
+         }else{
+             this.paragens = Paragens2.ALTO_MAE;
+             System.out.println("Terminal Alto-Mae");
+         }
+             
+         
         
         //new Thread(this).start();
-        new Thread(this, "Alto-Mae-P.Combantentes " + matricula).start();
+        this.setName("Alto-Mae-P.Combantentes " + matricula);
+        this.start();
+        System.out.println("Thread iniciada...");
         
     }
     
+    //retorna a paragem atual
     public Paragens2 getParagens(){
-        return paragens;
+        
+        return this.paragens;
     }
-
+    //retona a lotacao maxima do transporte
     public int getLotacaoMax() {
         return lotacaoMax;
     }
     
     
-    
+    //metodo executado ao instaciar a classe
     @Override
     public void run() {
-        System.out.println("Nome da thread" + Thread.currentThread().getName()); 
+        
         while(!parar){
         
             try {
@@ -41,69 +63,72 @@ public class ThreadParagens2 implements Runnable {
                 this.mudarParagem();
                 
             } catch (InterruptedException ex) {
-                Logger.getLogger(ThreadParagens.class.getName()).log(Level.SEVERE, null, ex);
+                 System.out.println(ex.getMessage());
             }
     }
     }
     
     
-    //ver sobre wait e notifi
+    //metodo que representa a trajectoria de um transporte
     public synchronized void ida(){
         switch(this.paragens){
             case ALTO_MAE:
                    
-                   subidarPassageiros(20);
+                   entradaPassageiros(20);
                    this.paragens =  Paragens2.SHOPRITE;
                    
                 break; 
             case SHOPRITE:
-                    descidaPassageiros(7);
-                    subidarPassageiros(2);
+                    descidaPassageiros(10);
+                    entradaPassageiros(14);
                     
                      this.paragens = Paragens2.PRACA;
 
                 break; 
            case PRACA:
-                    //this.paragens = Paragens2.ALTO_MAE;
+                    
                     //descidaPassageiros();
                this.lotacaoAtual = 0;
-                    subidarPassageiros(4);
+                    entradaPassageiros(6);
                     cont++;
                     
-                    System.out.println("terminal ida");
+                   // System.out.println("terminal ida");
                 break;
            default:
                break;
          }
         
     }
-    
+     //metodo que representa a trajectoria de um transporte
     public void volta(){
         switch(this.paragens){
             case ALTO_MAE:
                    this.lotacaoAtual = 0;
-                   subidarPassageiros(12);
+                   entradaPassageiros(20);
                   // this.paragens =  Paragens2.SHOPRITE;
-                   System.out.println("terminal volta");
+                  // System.out.println("terminal volta");
                    cont--;
                 break; 
             case SHOPRITE:
-                      descidaPassageiros(5);
-                      subidarPassageiros(8);
+                      descidaPassageiros(15);
+                      entradaPassageiros(10);
                      this.paragens = Paragens2.ALTO_MAE;
 
                 break; 
            case PRACA:
                    this.paragens = Paragens2.SHOPRITE;
-                    descidaPassageiros(2);
-                    subidarPassageiros(12);
-                    System.out.println("terminal");
+                    descidaPassageiros(13);
+                    entradaPassageiros(15);
+                    //System.out.println("terminal");
                 break;
            default:
                break;
          }
     }
     
+    /**
+     * metodo para notificar a thread para mudar a localizacao
+     */
     public synchronized void mudarParagem(){
         
          if(cont == 0){
@@ -123,6 +148,9 @@ public class ThreadParagens2 implements Runnable {
         this.mudouParagem = false;
     }
     
+    /**
+        Metodo para concluir a execucao da thread 
+    */
     public synchronized void fecharParagem(){
         this.parar = true;
         
@@ -141,9 +169,9 @@ public class ThreadParagens2 implements Runnable {
         this.volta = true;
     }
     
-    //fazer essa funcao para simular a entrada de passageiros no auto carro
-    public synchronized void subidarPassageiros(int nr){
-          
+    //metodo que simula a entrada de passageiros no transporte
+    public synchronized void entradaPassageiros(int ran){
+          int nr = random.nextInt(ran);
         
           if(this.lotacaoAtual >= lotacaoMax){
             System.out.println("lotacao cheia");
@@ -153,26 +181,34 @@ public class ThreadParagens2 implements Runnable {
         
        
         
-        System.out.println("lotacao atual: " + this.lotacaoAtual + "/" + lotacaoMax);
-    }
-    
-     public synchronized void descidaPassageiros(int nr){
         
+    }
+     //metodo que simula a saida de passageiros no transporte
+     public synchronized void descidaPassageiros(int ran){
+        int nr = random.nextInt(ran);
         if((this.lotacaoAtual >= lotacaoMax) && (this.lotacaoAtual >= 0)){
             this.lotacaoAtual-=nr;
         }else{
-            System.out.println("ja nao pode descer");
+           // System.out.println("ja nao pode descer");
         }
         
-        System.out.println("lotacao atual: " + this.lotacaoAtual + "/" + lotacaoMax);
+        
     }
     
+     //retorna a lotacao atual
     public int getLotacaoAtual(){
         return lotacaoAtual;
     }
-    
+    //retorna o nome da thread
     public String getThreadName(){
         
-        return Thread.currentThread().getName();
+        //return Thread.currentThread().getName();
+        return this.getName();
     }
+
+    public void setCont(int cont) {
+        this.cont = cont;
+    }
+    
+    
 }

@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import model.Passageiro;
+import view.TelaPrincipalApp;
 
-import view.TelaPrincipalApp1;
+
 
 public class PassageiroDao {
 
@@ -185,6 +186,42 @@ public class PassageiroDao {
         return null;
     }
     
+    public ArrayList<Passageiro> readAllRemovidos() {
+        String url = "SELECT * FROM removidos";
+        try {
+            PreparedStatement ps = dataSource.getConnection().prepareStatement(url);
+            ResultSet rs = ps.executeQuery();
+
+            ArrayList<Passageiro> lista = new ArrayList<>();
+
+            while (rs.next()) {
+                Passageiro passageiro = new Passageiro();
+                passageiro.setId(rs.getInt("id"));
+                passageiro.setNome(rs.getString("nome"));
+                passageiro.setApelido(rs.getString("apelido"));
+                passageiro.setIdade(rs.getInt("idade"));
+                passageiro.setContacto(rs.getString("contacto"));
+                passageiro.setContaSaldo(rs.getFloat("contaSaldo"));
+                passageiro.setNomeUsuario(rs.getString("nomeUsuario"));
+                passageiro.setPalavraPasse(rs.getString("palavraPasse"));
+
+                lista.add(passageiro);
+
+            }
+
+            ps.close();
+
+            return lista;
+
+        } catch (SQLException e) {
+            System.err.println("erro ao listar " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("erro geral" + e.getMessage());
+        }
+
+        return null;
+    }
+    
      public ArrayList<Passageiro> readbyNomeUsuario(String usuario) {
         String url = "SELECT * FROM passageiro WHERE nomeUsuario LIKE ?";
         try {
@@ -306,7 +343,7 @@ public class PassageiroDao {
 
                 check = true;
 
-                new TelaPrincipalApp1(passageiro).setVisible(true);
+                new TelaPrincipalApp(passageiro).setVisible(true);
             }
 
             ps.close();
@@ -322,7 +359,7 @@ public class PassageiroDao {
 
     public void mudarSenha(int id, String senhaAtual, String senhaNova, String senhaConfirmada) {
 
-        boolean check = false;
+        
         try {
 
             String SQL = "SELECT * FROM passageiro WHERE id ='" + id + "'";

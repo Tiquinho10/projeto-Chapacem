@@ -1,28 +1,50 @@
 package model;
 
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class ThreadParagens implements Runnable {
+/**
+  * classe que simula a movimentacao de um transporte 
+  * para o efeito foram usadas Threads(Processos)
+  */
+public class Semi_ColectivoB extends Thread {
      private boolean parar;
      private boolean mudouParagem;
      private Paragens paragens;
      private int lotacaoAtual;
        private boolean volta;
-      private final int lotacaoMax = 30;
-       int cont = 0;
+      private final int lotacaoMax = 40;
+      private int cont = 0;
+      private Random random = new Random();
+       
     
-    public ThreadParagens(String matricula){
-         this.paragens = Paragens.CENTRAL;
+       /**
+      * contrutor da classe que inicia a thread
+      * @param matricula - recebe a matricula do veiculo
+      */
+    public Semi_ColectivoB(String matricula, int terminal){
+      
+        setCont(terminal);
+         if(cont >= 1){
+             this.paragens = Paragens.RONIL;
+             
+         }else{
+             this.paragens = Paragens.CENTRAL;
+            
+         }
         
-        //new Thread(this).start();
-        new Thread(this, "Central-Ronil " + matricula).start();
+         this.setName( "Central-Ronil " + matricula);
+         this.start();
+        
+      
         
     }
     
-    public Paragens getParagens(){
-        return paragens;
+    //retorna a paragem atual
+    public  Paragens getParagens(){
+          
+        return this.paragens;
     }
 
     public int getLotacaoMax() {
@@ -33,7 +55,7 @@ public class ThreadParagens implements Runnable {
     
     @Override
     public void run() {
-        System.out.println("Nome da thread" + Thread.currentThread().getName()); 
+       
         while(!parar){
         
             try {
@@ -41,7 +63,7 @@ public class ThreadParagens implements Runnable {
                 this.mudarParagem();
                 
             } catch (InterruptedException ex) {
-                Logger.getLogger(ThreadParagens.class.getName()).log(Level.SEVERE, null, ex);
+                  System.out.println(ex.getMessage());
             }
     }
     }
@@ -50,13 +72,13 @@ public class ThreadParagens implements Runnable {
         switch(this.paragens){
             case CENTRAL:
                    
-                    subidarPassageiros(10);
+                    entradaPassageiros(20);
                    this.paragens =  Paragens.PANDORA;
                    
                 break; 
             case PANDORA:
-                      descidaPassageiros(4);
-                      subidarPassageiros(2);
+                      descidaPassageiros(10);
+                      entradaPassageiros(11);
                      this.paragens = Paragens.RONIL;
 
                 break; 
@@ -64,10 +86,10 @@ public class ThreadParagens implements Runnable {
                     //this.paragens = Paragens2.ALTO_MAE;
                     //descidaPassageiros();
                this.lotacaoAtual = 0;
-                    subidarPassageiros(12);
+                    entradaPassageiros(6);
                     cont++;
                     
-                    System.out.println("terminal ida");
+                    //System.out.println("terminal ida");
                 break;
            default:
                break;
@@ -79,23 +101,23 @@ public class ThreadParagens implements Runnable {
         switch(this.paragens){
             case CENTRAL:
                    this.lotacaoAtual = 0;
-                   subidarPassageiros(10);
+                   entradaPassageiros(20);
                   // this.paragens =  Paragens2.SHOPRITE;
-                   System.out.println("terminal volta");
+                  // System.out.println("terminal volta");
                    cont--;
                 break; 
             case PANDORA:
-                    descidaPassageiros(3);
-                    subidarPassageiros(6);
+                    descidaPassageiros(14);
+                    entradaPassageiros(10);
                    
                      this.paragens = Paragens.CENTRAL;
 
                 break; 
            case RONIL:
                    this.paragens = Paragens.PANDORA;
-                    //descidaPassageiros();
-                    subidarPassageiros(11);
-                    System.out.println("terminal");
+                    descidaPassageiros(5);
+                    entradaPassageiros(15);
+                    //System.out.println("terminal");
                 break;
            default:
                break;
@@ -139,8 +161,8 @@ public class ThreadParagens implements Runnable {
     }
     
     //fazer essa funcao para simular a entrada de passageiros no auto carro
-    public synchronized void subidarPassageiros(int nr){
-          
+    public synchronized void entradaPassageiros(int ran){
+           int nr = random.nextInt(ran);
         
           if(this.lotacaoAtual >= lotacaoMax){
             System.out.println("lotacao cheia");
@@ -150,18 +172,18 @@ public class ThreadParagens implements Runnable {
         
        
         
-        System.out.println("lotacao atual: " + this.lotacaoAtual + "/" + lotacaoMax);
+        
     }
     
-     public synchronized void descidaPassageiros(int nr){
-        
+     public synchronized void descidaPassageiros(int ran){
+            int nr = random.nextInt(ran);
         if((this.lotacaoAtual >= lotacaoMax) && (this.lotacaoAtual > 0)){
             this.lotacaoAtual-=nr;
         }else{
-            System.out.println("ja nao pode descer");
+           // System.out.println("ja nao pode descer");
         }
         
-        System.out.println("lotacao atual: " + this.lotacaoAtual + "/" + lotacaoMax);
+       
     }
     
     public int getLotacaoAtual(){
@@ -170,6 +192,12 @@ public class ThreadParagens implements Runnable {
     
     public String getThreadName(){
         
-        return Thread.currentThread().getName();
+        return this.getName();
     }
+
+    public void setCont(int cont) {
+        this.cont = cont;
+    }
+    
+    
 }

@@ -2,7 +2,7 @@ package model;
 
 public enum Paragens {
     
-        CENTRAL(15000), PANDORA(2000), RONIL(2000);
+        CENTRAL(5000), PANDORA(5000), RONIL(5000);
         
         private int tempoEspera;
         

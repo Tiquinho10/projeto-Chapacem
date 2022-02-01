@@ -1,0 +1,19 @@
+                                                             Credenciais de acesso ao sistema
+
+	1 - Opção Administrador 
+
+       acesso:
+       Nome de usuario = admin;
+       Palavra Passe = admin;
+
+      codigo para executar as funcionalidades do sistema = 1234;
+
+      2- Opção passageiro
+
+       È necessario cadastrar um novo passageiro ou usar os dados de passageiros previamente cadastrados.
+   
+      Alguns usuarios previamente cadastrados:
+    
+      Nome de Usuario = tiquinho10, senha = pass1234;
+
+      Nome de Usuario = JoanaMatos, senha = j8932;	
