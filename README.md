@@ -1,0 +1,8 @@
+# projeto-Chapacem
+
+Que problema se pretende resolver com o presente aplicativo? Esta é uma pergunta, que facilmente respondemos se pensarmos na problemática de transportes semi colectivos, na cidade de Maputo e bairros adjacentes. A mobilidade é bastante crítica, num cenário em que as deslocações do ponto A para B fazem-se necessárias no nosso dia a dia. 
+Sempre que o utente, de transportes públicos se faz a rua em busca de transporte, surgem várias interrogações tais como: Qual seria a paragem mais conveniente? A que horas chega o transporte? Qual é o autocarro disponível? Como está a lotação do mesmo?  Que rota tomar? Quais são as paragens? Será o meu orçamento suficente para a compra de bilhetes?
+Com o presente aplicativo pretendemos, não eliminar esta questões, mas sim trazer as respostas no comforto do seu sofá, bem mesmo antes de saír de casa e também ao longo do seu percurso, à distância de dois our três “clicks”.
+Esta plataforma, consiste em dois subprogramas, onde temos um para o admnistrador e outro para o utente.
+O subprograma ao serviço do administrador, permite cadastrar utente de transporte, efectuar o depósito inicial, efectuar depósitos subsequentes, e alterar detalhes do usuário. O cadastro e os depósitos são feitos de forma presencial, no entanto, existe perspectiva de densevolver o aplicativo para recebimento de depósitos de forma digital.
+Por outro lado, o subprograma do utilizador do transporte, permite verificar as rotas existentes, selecionar a rota, verificar as paragens, obter o tempo estimado de chegada do transporte e efectuar compras de bilhetes.
